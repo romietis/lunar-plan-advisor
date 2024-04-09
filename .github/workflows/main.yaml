@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Log in to Azure
-        uses: azure/login@v1
+        uses: azure/login@v1a
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_LUNAR_PLAN_ADVISOR_SECRET }}
 
       - name: Build and deploy Container App
         uses: azure/container-apps-deploy-action@v1
