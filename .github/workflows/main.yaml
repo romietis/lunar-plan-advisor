@@ -6,14 +6,16 @@ on:
       - main
 
 jobs:
+  test:
+  name: Test
+    uses: ./.github/workflows/test.yaml
+
   build:
+  name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Run tests
-        uses: ./.github/workflows/test.yaml
 
       - name: Log in to Azure
         uses: azure/login@v1
