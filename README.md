@@ -1,3 +1,6 @@
+
+<a href="https://www.buymeacoffee.com/romietis00z" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width=""></a>
+
 ## Lunar Plan Advisor
 
 *Currently only for Lunar Denmark*
@@ -7,27 +10,19 @@ your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/
 
 ## Reasoning
 
-With Lunar paid plan, you receive positive interest on your accounts,regardless of the
-amount you have.
+With Lunar paid plans, you receive positive interest on your accounts,regardless of the amount.
 
-Lunar provides
+Lunar has an
 [interest rate calculator](https://www.lunar.app/en/personal/positive-interest-rate-lunar)
-which can help you to visualize you what you can possibly earn with different amounts and
-different plans. But it is lacking guidance for their users - it is not providing most
-effective plan based on *your* savings. 
+to help you see what you can earn with different amounts and plans.
+But it doesn't tell you which plan is most profitable based on *your* savings.
 
-*Lunar Plan Advisor* helps you to determine a plan based on the ***net profit*** - interest
-income after deducting plan fees.
+*Lunar Plan Advisor* helps you determine a plan based on the
+*net profit* - interest income after plan fees.
 
-This application guides you to select a savings plan based on net profit.
-It helps identify the point at which one plan becomes more profitable than another by 
-comparing the net profits of different plans.
-
-For example, if you have 105600 DKK, you can choose between two plans because they yield
-the same net profit. (Most likely) you would choose the second plan, because it will
-offer better insurance coverage.
-
-![2-plan-example](assets/images/2planExample.png)
+This application guides you to select a plan based on net profit. It helps
+identify the point at which one plan becomes more profitable than another by comparing
+the net profits of different plans.
 
 ## Privacy
 It is a client-side application, which means that your data is not stored or sent to

@@ -7,7 +7,5 @@ import (
 )
 
 func Endpoint(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "Plan",
-	})
+	c.HTML(http.StatusOK, "index.html", nil)
 }
