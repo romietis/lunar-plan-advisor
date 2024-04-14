@@ -11,7 +11,7 @@
 This is a simple web application that helps you to choose the best Lunar plan based on
 your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/JavaScript.
 
-## Reasoning
+## Rational
 
 With Lunar paid plans, you receive positive interest on your accounts,regardless of the amount.
 
