@@ -1,6 +1,9 @@
 
 <a href="https://www.buymeacoffee.com/romietis00z" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width=""></a>
 
+[![Test](https://github.com/romietis/lunar-plan-advisor/actions/workflows/test.yaml/badge.svg)](https://github.com/romietis/lunar-plan-advisor/actions/workflows/test.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/romietis/lunar-plan-advisor)](https://goreportcard.com/report/github.com/romietis/lunar-plan-advisor)
+
 ## Lunar Plan Advisor
 
 *Currently only for Lunar Denmark*
