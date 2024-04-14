@@ -25,7 +25,7 @@ func TestEndpoint(t *testing.T) {
 
 	// Call the endpoint, check the status code
 	Endpoint(c)
-	if w.Code != http.StatusAccepted {
+	if w.Code != http.StatusOK {
 		t.Errorf("response code is %v", w.Code)
 	}
 }
