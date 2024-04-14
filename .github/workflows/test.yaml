@@ -1,6 +1,8 @@
 name: Test
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_call:
@@ -28,7 +30,7 @@ jobs:
       run: go test -v ./...
 
   js-test:
-    name: Js Tests
+    name: JS Tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

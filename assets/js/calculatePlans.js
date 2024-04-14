@@ -1,16 +1,18 @@
 // Define the Plan struct
-function Plan(name, annualInterestRate, fee, cap = null) {
-    this.name = name;
-    this.annualInterestRate = annualInterestRate;
-    this.fee = fee;
-    this.cap = cap;
+class Plan {
+    constructor(name, annualInterestRate, fee, cap = null) {
+        this.name = name;
+        this.annualInterestRate = annualInterestRate;
+        this.fee = fee;
+        this.cap = cap;
 
-    // Initialize additional fields
-    this.annualFee = fee * 12;
-    this.annualInterest = 0;
-    this.monthlyInterest = 0;
-    this.annualInterestProfit =  0;
-    this.monthlyInterestProfit = 0;
+        // Initialize additional fields
+        this.annualFee = fee * 12;
+        this.annualInterest = 0;
+        this.monthlyInterest = 0;
+        this.annualInterestProfit = 0;
+        this.monthlyInterestProfit = 0;
+    }
 }
 
 // Initialize instances of the Plan struct for each plan
