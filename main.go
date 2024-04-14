@@ -13,6 +13,9 @@ func main() {
 	router.Static("/js", "assets/js")
 
 	router.GET("/", advisor.Endpoint)
+	router.GET("/google0c4ea5396b01145c.html", func(c *gin.Context) {
+		c.JSON(200, nil)
+	})
 
 	router.Run()
 

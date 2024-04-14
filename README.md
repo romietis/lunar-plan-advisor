@@ -19,10 +19,8 @@ But it doesn't tell you which plan is most profitable based on *your* savings.
 
 *Lunar Plan Advisor* helps you determine a plan based on the
 *net profit* - interest income after plan fees.
-
-This application guides you to select a plan based on net profit. It helps
-identify the point at which one plan becomes more profitable than another by comparing
-the net profits of different plans.
+It helps identify the point at which one plan becomes more profitable than another by
+comparing the net profits of different plans.
 
 ## Privacy
 It is a client-side application, which means that your data is not stored or sent to

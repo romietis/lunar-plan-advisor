@@ -4,13 +4,17 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_call:
+  # Every week on Sunday at 23:00
+  schedule:
+    - cron: "0 23 * * 0"
 
 jobs:
 
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
