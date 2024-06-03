@@ -44,6 +44,10 @@ function displayBestPlans(plans) {
             monthlyProfit.textContent = "Monthly Interest after fee: " + plan.monthlyInterestProfit.toFixed(2);
             div.appendChild(monthlyProfit);
 
+            fetch("/hello")
+            .then(response => response.json())
+            .then(data => console.log(data));
+
             container.appendChild(div);
         });
     }

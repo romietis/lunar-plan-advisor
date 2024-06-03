@@ -19,6 +19,12 @@ func main() {
 		c.HTML(http.StatusOK, "google0c4ea5396b01145c.html", nil)
 	})
 
+	router.GET("/hello", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "hello",
+		})
+	})
+
 	router.Run()
 
 }

@@ -13,7 +13,8 @@ your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/
 
 ## Rational
 
-With Lunar paid plans, you receive positive interest on your accounts,regardless of the amount.
+With Lunar paid plans, you receive positive interest on your accounts,
+regardless of the amount.
 
 Lunar has an
 [interest rate calculator](https://www.lunar.app/en/personal/positive-interest-rate-lunar)
