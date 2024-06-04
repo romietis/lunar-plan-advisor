@@ -11,6 +11,12 @@
 This is a simple web application that helps you to choose the best Lunar plan based on
 your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/JavaScript.
 
+Now exposing API endpoint to calculate the best plan based on the savings.
+
+```bash
+curl https://lunar-plan-advisor.calmground-6bcda4d8.northeurope.azurecontainerapps.io/plans?balance=100000
+```
+
 ## Rational
 
 With Lunar paid plans, you receive positive interest on your accounts,

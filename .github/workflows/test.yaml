@@ -28,17 +28,3 @@ jobs:
 
     - name: Test
       run: go test -v ./...
-
-  js-test:
-    name: JS Tests
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '21'
-
-    - name: Test
-      run: node assets/js/calculatePlans.test.js
