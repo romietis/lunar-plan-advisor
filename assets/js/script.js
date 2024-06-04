@@ -1,13 +1,16 @@
-// Function to calculate the best plans based on the amount
+// Function to call localhost endpoint
 function calculateBestPlans() {
-    var amountText = document.getElementById("amount").value.trim();
-    var amount = parseFloat(amountText);
-    if (isNaN(amount)) {
-        alert("Please enter a valid amount.");
+    var balanceText = document.getElementById("balance").value.trim();
+    var balance = parseFloat(balanceText);
+    if (isNaN(balance)) {
+        alert("Please enter a valid balance");
         return;
     }
-    bestPlans = calculatePlans(amount)
-    displayBestPlans(bestPlans);
+    fetch("/plans?balance=" + balance)
+    .then(response => response.json())
+    .then(data => {
+        displayBestPlans(data.plans);
+    })
 }
 
 // Function to display the best plans
@@ -43,10 +46,6 @@ function displayBestPlans(plans) {
             var monthlyProfit = document.createElement("p");
             monthlyProfit.textContent = "Monthly Interest after fee: " + plan.monthlyInterestProfit.toFixed(2);
             div.appendChild(monthlyProfit);
-
-            fetch("/hello")
-            .then(response => response.json())
-            .then(data => console.log(data));
 
             container.appendChild(div);
         });
