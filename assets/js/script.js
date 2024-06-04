@@ -18,7 +18,6 @@ function displayBestPlans(plans) {
     var container = document.getElementById("best-plans");
     container.innerHTML = "";
 
-
     if (plans.length > 0) {
         var header = document.createElement("h3");
         header.textContent = "Best plans for you:";
