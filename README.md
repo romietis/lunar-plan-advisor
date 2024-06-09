@@ -31,7 +31,7 @@ Now exposing API endpoint with query parameter `balance`
 curl https://lunar-plan-advisor.calmground-6bcda4d8.northeurope.azurecontainerapps.io/plans?balance=100000
 ```
 
-## Rational
+## Background
 
 With Lunar you receive positive interest rate on active balance of your accounts.
 
