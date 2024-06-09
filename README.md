@@ -11,7 +11,21 @@
 This is a simple web application that helps you to choose the best Lunar plan based on
 your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/JavaScript.
 
-Now exposing API endpoint to calculate the best plan based on the savings.
+## How to run
+
+```bash
+go run main.go
+```
+
+or run with Docker
+
+```bash
+docker build -t lunar-plan-advisor .
+docker run -p 8080:8080 lunar-plan-advisor
+```
+
+## API
+Now exposing API endpoint with query parameter `balance`
 
 ```bash
 curl https://lunar-plan-advisor.calmground-6bcda4d8.northeurope.azurecontainerapps.io/plans?balance=100000
@@ -19,8 +33,7 @@ curl https://lunar-plan-advisor.calmground-6bcda4d8.northeurope.azurecontainerap
 
 ## Rational
 
-With Lunar paid plans, you receive positive interest on your accounts,
-regardless of the amount.
+With Lunar you receive positive interest rate on active balance of your accounts.
 
 Lunar has an
 [interest rate calculator](https://www.lunar.app/en/personal/positive-interest-rate-lunar)
@@ -33,5 +46,4 @@ It helps identify the point at which one plan becomes more profitable than anoth
 comparing the net profits of different plans.
 
 ## Privacy
-It is a client-side application, which means that your data is not stored or sent to
-anyone.
+Your data is not stored or sent to anyone.
