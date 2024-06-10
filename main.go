@@ -3,8 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/romietis/lunar-plan-advisor/internal/endpoints"
+
 	"github.com/gin-gonic/gin"
-	"github.com/romietis/lunar-plan-advisor/advisor"
 )
 
 func main() {
@@ -20,10 +21,10 @@ func main() {
 	})
 
 	// Serve script
-	router.GET("/", advisor.Endpoint)
+	router.GET("/", endpoints.Home)
 
 	// Public endpoint to fetch plans
-	router.GET("/plans", advisor.PlansEndpoint)
+	router.GET("/plans", endpoints.GetPlans)
 
 	router.Run()
 
