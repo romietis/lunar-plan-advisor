@@ -1,4 +1,4 @@
-package main
+package tests
 
 import (
 	"context"
@@ -38,7 +38,7 @@ func (a *apiFeature) iSendRequestTo(method, endpoint string) (err error) {
 	}()
 
 	c, router := gin.CreateTestContext(a.resp)
-	router.LoadHTMLGlob("../../assets/templates/*")
+	router.LoadHTMLGlob("../../../assets/templates/*")
 	c.Request = req
 
 	switch endpoint {

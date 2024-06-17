@@ -23,6 +23,7 @@ or run with Docker
 docker build -t lunar-plan-advisor .
 docker run -p 8080:8080 lunar-plan-advisor
 ```
+Your application will be available at localhost:8080 and 0.0.0.0:8080
 
 ## API
 Now exposing API endpoint with query parameter `balance`
