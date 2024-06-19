@@ -1,4 +1,4 @@
-package advisor
+package endpoints
 
 import (
 	"net/http"
@@ -20,12 +20,12 @@ func TestEndpoint(t *testing.T) {
 	c, router := gin.CreateTestContext(w)
 
 	// Load HTML templates
-	router.LoadHTMLGlob("../assets/templates/*")
+	router.LoadHTMLGlob("../../../../assets/templates/*")
 
 	c.Request = request
 
 	// Call the endpoint, check the status code
-	Endpoint(c)
+	Home(c)
 	if w.Code != http.StatusOK {
 		t.Errorf("response code is %v", w.Code)
 	}
@@ -36,7 +36,7 @@ func TestPlansEndpoint_ValidInput(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/?balance=1000", nil)
 	c, _ := gin.CreateTestContext(w)
 	c.Request = request
-	PlansEndpoint(c)
+	GetPlans(c)
 	if w.Code != http.StatusOK {
 		t.Errorf("response code is %v", w.Code)
 	}
@@ -47,7 +47,7 @@ func TestPlansEndpoint_MissingBalance(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/", nil)
 	c, _ := gin.CreateTestContext(w)
 	c.Request = request
-	PlansEndpoint(c)
+	GetPlans(c)
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("response code is %v", w.Code)
 	}
@@ -62,7 +62,7 @@ func TestPlansEndpoint_InvalidBalance(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/?balance=invalid", nil)
 	c, _ := gin.CreateTestContext(w)
 	c.Request = request
-	PlansEndpoint(c)
+	GetPlans(c)
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("response code is %v", w.Code)
 	}
@@ -77,7 +77,7 @@ func TestPlansEndpoint_NegativeInput(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/?balance=-1000", nil)
 	c, _ := gin.CreateTestContext(w)
 	c.Request = request
-	PlansEndpoint(c)
+	GetPlans(c)
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("response code is %v", w.Code)
 	}

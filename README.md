@@ -13,8 +13,10 @@ your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/
 
 ## How to run
 
+### Web-Server
+
 ```bash
-go run main.go
+go run internal/cmd/web/main.go
 ```
 
 or run with Docker
@@ -23,6 +25,7 @@ or run with Docker
 docker build -t lunar-plan-advisor .
 docker run -p 8080:8080 lunar-plan-advisor
 ```
+Your application will be available at localhost:8080 and 0.0.0.0:8080
 
 ## API
 Now exposing API endpoint with query parameter `balance`
