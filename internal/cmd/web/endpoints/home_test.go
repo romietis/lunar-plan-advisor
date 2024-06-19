@@ -20,7 +20,7 @@ func TestEndpoint(t *testing.T) {
 	c, router := gin.CreateTestContext(w)
 
 	// Load HTML templates
-	router.LoadHTMLGlob("../../assets/templates/*")
+	router.LoadHTMLGlob("../../../../assets/templates/*")
 
 	c.Request = request
 

@@ -13,8 +13,10 @@ your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/
 
 ## How to run
 
+### Web-Server
+
 ```bash
-go run main.go
+go run internal/cmd/web/main.go
 ```
 
 or run with Docker

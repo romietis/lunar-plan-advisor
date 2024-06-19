@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/romietis/lunar-plan-advisor/internal/endpoints"
+	"github.com/romietis/lunar-plan-advisor/internal/cmd/web/endpoints"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +15,7 @@ func main() {
 	router.LoadHTMLGlob("assets/templates/*")
 	router.Static("/css", "assets/css")
 	router.Static("/js", "assets/js")
+
 	// Google Search Console
 	router.GET("/google0c4ea5396b01145c.html", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "google0c4ea5396b01145c.html", nil)

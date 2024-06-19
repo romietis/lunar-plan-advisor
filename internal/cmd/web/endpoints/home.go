@@ -15,9 +15,9 @@ func Home(c *gin.Context) {
 
 func GetPlans(c *gin.Context) {
 	planConfig := []advisor.Plan{
-		{Name: "Light", AnnualInterestRate: 1.5, Fee: 0.0, Cap: 100000},
-		{Name: "Standard", AnnualInterestRate: 1.75, Fee: 29.0, Cap: 100000},
-		{Name: "Plus", AnnualInterestRate: 2.0, Fee: 69.0, Cap: 0},
+		{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+		{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+		{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
 		{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 119.0, Cap: 0},
 	}
 
