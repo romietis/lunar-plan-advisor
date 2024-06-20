@@ -1,7 +1,7 @@
-Feature: Get plans
+Feature: Get plan advice
   As a customer
-  In order be well informed
-  I need to be able to get advice on plans
+  I want to know which plan yields highest annual interest profit based on my balance
+  In order to make most of my money
 
   Scenario: GET request home
       # Given there are 4 plans
