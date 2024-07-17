@@ -32,20 +32,28 @@ function displayBestPlans(plans) {
             div.appendChild(name);
 
             var annualIncome = document.createElement("p");
-            annualIncome.textContent = "Annual Interest: " + plan.annualInterest.toFixed(2);
+            annualIncome.textContent = "Annual interest: " + plan.annualInterest.toFixed(2);
             div.appendChild(annualIncome);
 
             var monthlyIncome = document.createElement("p");
-            monthlyIncome.textContent = "Monthly Interest: " + plan.monthlyInterest.toFixed(2);
+            monthlyIncome.textContent = "Monthly interest: " + plan.monthlyInterest.toFixed(2);
             div.appendChild(monthlyIncome);
 
             var annualProfit = document.createElement("p");
-            annualProfit.textContent = "Annual Interest after fees: " + plan.annualInterestProfit.toFixed(2);
+            annualProfit.textContent = "Annual interest profit after fees: " + plan.annualInterestProfit.toFixed(2);
             div.appendChild(annualProfit);
 
             var monthlyProfit = document.createElement("p");
-            monthlyProfit.textContent = "Monthly Interest after fee: " + plan.monthlyInterestProfit.toFixed(2);
+            monthlyProfit.textContent = "Monthly interest after fee: " + plan.monthlyInterestProfit.toFixed(2);
             div.appendChild(monthlyProfit);
+            
+            var annualCompoundInterest = document.createElement("p");
+            annualCompoundInterest.textContent = "Annual compound interest: " + plan.annualCompoundInterest.toFixed(2);
+            div.appendChild(annualCompoundInterest);
+
+            var annualCompoundProfit = document.createElement("p");
+            annualCompoundProfit.textContent = "Annual compound interest profit after fees: " + plan.annualCompoundProfit.toFixed(2);
+            div.appendChild(annualCompoundProfit);
 
             container.appendChild(div);
         });
