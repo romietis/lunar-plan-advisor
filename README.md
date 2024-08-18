@@ -16,7 +16,7 @@ your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/
 ### Web-Server
 
 ```bash
-go run internal/cmd/web/main.go
+go run cmd/web/main.go
 ```
 
 or run with Docker
