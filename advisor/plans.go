@@ -39,8 +39,8 @@ func CalculatePlans(balance float64, planConfig []Plan) ([]Plan, error) {
 		plan.AnnualFee = plan.Fee * 12
 		plan.AnnualInterestProfit = plan.AnnualInterest - plan.AnnualFee
 		plan.MonthlyInterestProfit = plan.AnnualInterestProfit / 12
-		plan.AnnualCompoundInterest = effectiveBalance * math.Pow(1+(plan.AnnualInterestRate/100)/12, 12)
-		plan.AnnualCompoundProfit = plan.AnnualCompoundInterest - effectiveBalance - plan.Fee
+		plan.AnnualCompoundInterest = effectiveBalance * math.Pow(1+(plan.AnnualInterestRate/100)/12, 12) - effectiveBalance
+		plan.AnnualCompoundProfit = plan.AnnualCompoundInterest - plan.AnnualFee
 
 		if plan.AnnualCompoundProfit > maxProfit {
 			maxProfit = plan.AnnualCompoundProfit

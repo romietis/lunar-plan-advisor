@@ -20,7 +20,7 @@ func TestEndpoint(t *testing.T) {
 	c, router := gin.CreateTestContext(w)
 
 	// Load HTML templates
-	router.LoadHTMLGlob("../../../../assets/templates/*")
+	router.LoadHTMLGlob("../../assets/templates/*")
 
 	c.Request = request
 
@@ -31,7 +31,7 @@ func TestEndpoint(t *testing.T) {
 	}
 }
 
-func TestPlansEndpoint_ValidInput(t *testing.T) {
+func TestPlansEndpointValidInput(t *testing.T) {
 	w := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/?balance=1000", nil)
 	c, _ := gin.CreateTestContext(w)
@@ -42,7 +42,7 @@ func TestPlansEndpoint_ValidInput(t *testing.T) {
 	}
 }
 
-func TestPlansEndpoint_MissingBalance(t *testing.T) {
+func TestPlansEndpointMissingBalance(t *testing.T) {
 	w := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/", nil)
 	c, _ := gin.CreateTestContext(w)
@@ -57,7 +57,7 @@ func TestPlansEndpoint_MissingBalance(t *testing.T) {
 	}
 }
 
-func TestPlansEndpoint_InvalidBalance(t *testing.T) {
+func TestPlansEndpointInvalidBalance(t *testing.T) {
 	w := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/?balance=invalid", nil)
 	c, _ := gin.CreateTestContext(w)
@@ -72,7 +72,7 @@ func TestPlansEndpoint_InvalidBalance(t *testing.T) {
 	}
 }
 
-func TestPlansEndpoint_NegativeInput(t *testing.T) {
+func TestPlansEndpointNegativeInput(t *testing.T) {
 	w := httptest.NewRecorder()
 	request, _ := http.NewRequest("GET", "/?balance=-1000", nil)
 	c, _ := gin.CreateTestContext(w)
