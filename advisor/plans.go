@@ -6,15 +6,17 @@ import (
 )
 
 type Plan struct {
-	Name                  string  `json:"name"`
-	AnnualInterestRate    float64 `json:"annualInterestRate"`
-	Fee                   float64 `json:"fee"`
-	Cap                   float64 `json:"cap"`
-	AnnualFee             float64 `json:"annualFee"`
-	AnnualInterest        float64 `json:"annualInterest"`
-	MonthlyInterest       float64 `json:"monthlyInterest"`
-	AnnualInterestProfit  float64 `json:"annualInterestProfit"`
-	MonthlyInterestProfit float64 `json:"monthlyInterestProfit"`
+	Name                   string  `json:"name"`
+	AnnualInterestRate     float64 `json:"annualInterestRate"`
+	Fee                    float64 `json:"fee"`
+	Cap                    float64 `json:"cap"`
+	AnnualFee              float64 `json:"annualFee"`
+	AnnualInterest         float64 `json:"annualInterest"`
+	MonthlyInterest        float64 `json:"monthlyInterest"`
+	AnnualInterestProfit   float64 `json:"annualInterestProfit"`
+	MonthlyInterestProfit  float64 `json:"monthlyInterestProfit"`
+	AnnualCompoundInterest float64 `json:"annualCompoundInterest"`
+	AnnualCompoundProfit   float64 `json:"annualCompoundProfit"`
 }
 
 func CalculatePlans(balance float64, planConfig []Plan) ([]Plan, error) {
@@ -37,11 +39,13 @@ func CalculatePlans(balance float64, planConfig []Plan) ([]Plan, error) {
 		plan.AnnualFee = plan.Fee * 12
 		plan.AnnualInterestProfit = plan.AnnualInterest - plan.AnnualFee
 		plan.MonthlyInterestProfit = plan.AnnualInterestProfit / 12
+		plan.AnnualCompoundInterest = effectiveBalance * math.Pow(1+(plan.AnnualInterestRate/100)/12, 12) - effectiveBalance
+		plan.AnnualCompoundProfit = plan.AnnualCompoundInterest - plan.AnnualFee
 
-		if plan.AnnualInterestProfit > maxProfit {
-			maxProfit = plan.AnnualInterestProfit
+		if plan.AnnualCompoundProfit > maxProfit {
+			maxProfit = plan.AnnualCompoundProfit
 			bestPlans = []Plan{plan}
-		} else if plan.AnnualInterestProfit == maxProfit {
+		} else if plan.AnnualCompoundProfit == maxProfit {
 			bestPlans = append(bestPlans, plan)
 		}
 	}
