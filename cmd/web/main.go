@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/romietis/lunar-plan-advisor/internal/endpoints"
+	"github.com/romietis/lunar-plan-advisor/v2/internal/endpoints"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,4 +1,4 @@
-module github.com/romietis/lunar-plan-advisor
+module github.com/romietis/lunar-plan-advisor/v2
 
 go 1.22.3
 
