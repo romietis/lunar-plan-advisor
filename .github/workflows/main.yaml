@@ -24,7 +24,7 @@ jobs:
           creds: ${{ secrets.AZURE_LUNAR_PLAN_ADVISOR_SECRET }}
 
       - name: Build and deploy Container App
-        uses: azure/container-apps-deploy-action@v1
+        uses: azure/container-apps-deploy-action@v2
         with:
           appSourcePath: ${{ github.workspace }}
           acrName: lunarplanadvisorregistry
