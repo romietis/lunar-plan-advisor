@@ -65,7 +65,7 @@ func TestCalculatePlansCompound(t *testing.T) {
 	testCases := []struct {
 		balance                  float64
 		wantAnnualCompoundProfit float64
-		wantName string
+		wantName                 string
 	}{
 		{10000, 125.71863828854475, "Light"},
 		{100000, 1257.1863828854548, "Light"},
@@ -79,7 +79,7 @@ func TestCalculatePlansCompound(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if got[0].AnnualCompoundProfit != testCase.wantAnnualCompoundProfit && got[0].Name != testCase.wantName{
+			if got[0].AnnualCompoundProfit != testCase.wantAnnualCompoundProfit && got[0].Name != testCase.wantName {
 				t.Errorf("got %v, want %v", got, testCase)
 			}
 		})
