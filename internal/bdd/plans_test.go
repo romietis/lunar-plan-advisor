@@ -50,14 +50,14 @@ func (a *apiContext) sendRequestTo(method, endpoint string) error {
 
 }
 
-func (ac *apiContext) theResponseCodeShouldBe(code int) error {
+func (ac *apiContext) responseCodeShouldBe(code int) error {
 	if ac.response.Code != code {
 		return fmt.Errorf("expected response code to be: %d, but actual is: %d", code, ac.response.Code)
 	}
 	return nil
 }
 
-func (ac *apiContext) theResponseShouldMatchJSON() error {
+func (ac *apiContext) responseShouldMatch() error {
 	var expectedJsonStruct advisor.Best
 	if err := json.Unmarshal(ac.response.Body.Bytes(), &expectedJsonStruct); err != nil {
 		return err
@@ -97,6 +97,6 @@ func InitializeScenario(s *godog.ScenarioContext) {
 
 	s.Step(`^a blance of (-?\d+(\.\d+)?([eE][-+]?\d+)?)\s*DKK$`, api.givenBalance)
 	s.Step(`^I send "([^"]*)" request to "([^"]*)"$`, api.sendRequestTo)
-	s.Step(`^the response code should be (\d+)$`, api.theResponseCodeShouldBe)
-	s.Step(`^the response should match json`, api.theResponseShouldMatchJSON)
+	s.Step(`^the response code should be (\d+)$`, api.responseCodeShouldBe)
+	s.Step(`^the response should match json`, api.responseShouldMatch)
 }
