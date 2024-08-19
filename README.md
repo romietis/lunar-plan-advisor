@@ -3,6 +3,7 @@
 
 [![Test](https://github.com/romietis/lunar-plan-advisor/actions/workflows/test.yaml/badge.svg)](https://github.com/romietis/lunar-plan-advisor/actions/workflows/test.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/romietis/lunar-plan-advisor/v2)](https://goreportcard.com/report/github.com/romietis/lunar-plan-advisor/v2)
+[![codecov](https://codecov.io/github/romietis/lunar-plan-advisor/graph/badge.svg?token=7TL3J6GCYT)](https://codecov.io/github/romietis/lunar-plan-advisor)
 
 ## Lunar Plan Advisor
 
