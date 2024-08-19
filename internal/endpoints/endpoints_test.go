@@ -9,6 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func SetUpRouter() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
+	router := gin.New()
+	return router
+}
+
 func TestEndpoint(t *testing.T) {
 	// Create a response recorder
 	w := httptest.NewRecorder()
@@ -32,11 +38,14 @@ func TestEndpoint(t *testing.T) {
 }
 
 func TestPlansEndpointValidInput(t *testing.T) {
+	r := SetUpRouter()
+	r.GET("/plans", GetPlans)
+
 	w := httptest.NewRecorder()
-	request, _ := http.NewRequest("GET", "/?balance=1000", nil)
-	c, _ := gin.CreateTestContext(w)
-	c.Request = request
-	GetPlans(c)
+	request, _ := http.NewRequest("GET", "/plans?balance=1000", nil)
+
+	r.ServeHTTP(w, request)
+
 	if w.Code != http.StatusOK {
 		t.Errorf("response code is %v", w.Code)
 	}

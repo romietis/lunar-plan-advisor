@@ -19,6 +19,10 @@ type Plan struct {
 	AnnualCompoundProfit   float64 `json:"annualCompoundProfit"`
 }
 
+type Best struct {
+	Plans []Plan `json:"plans"`
+}
+
 // CalculatePlans calculates the best investment plans based on the given balance and plan configurations.
 // It returns a slice of plans because multiple plans can have the same maximum profit.
 func CalculatePlans(balance float64, planConfig []Plan) ([]Plan, error) {
