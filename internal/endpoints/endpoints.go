@@ -44,8 +44,10 @@ func GetPlans(c *gin.Context) {
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"plans": bestPlans,
-	})
+
+	best := advisor.Best{
+		Plans: bestPlans,
+	}
+	c.JSON(http.StatusOK, best)
 
 }
