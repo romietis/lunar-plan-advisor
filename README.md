@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/romietis/lunar-plan-advisor/v2)](https://goreportcard.com/report/github.com/romietis/lunar-plan-advisor/v2)
 [![codecov](https://codecov.io/github/romietis/lunar-plan-advisor/graph/badge.svg?token=7TL3J6GCYT)](https://codecov.io/github/romietis/lunar-plan-advisor)
 [![Go Reference](https://pkg.go.dev/badge/github.com/romietis/lunar-plan-advisor/v2.svg)](https://pkg.go.dev/github.com/romietis/lunar-plan-advisor/v2)
-![GitHub Release](https://img.shields.io/github/v/release/romietis/lunar-plan-advisor)
+[![GitHub Release](https://img.shields.io/github/v/release/romietis/lunar-plan-advisor)](https://github.com/romietis/lunar-plan-advisor/releases)
 
 
 *Currently only for Lunar Denmark*
