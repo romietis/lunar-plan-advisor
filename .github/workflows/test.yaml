@@ -15,22 +15,22 @@ jobs:
     name: Run tests and collect coverage
     runs-on: ubuntu-latest
     steps:
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-      name: Set up Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@v4
         with:
-          go-version: '1.22.3'
+          fetch-depth: 0
 
-      name: Install dependencies
-        run: go mod download
+      - name: Set up Go
+          uses: actions/setup-go@v5
+          with:
+            go-version: '1.22.3'
 
-      name: Run tests
+      - name: Install dependencies
+          run: go mod download
+
+      - name: Run tests
           run: go test -coverprofile=coverage.txt
 
-      name: Upload results to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload results to Codecov
+          uses: codecov/codecov-action@v4
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
