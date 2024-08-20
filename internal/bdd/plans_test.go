@@ -17,8 +17,8 @@ import (
 )
 
 type apiContext struct {
-	balance float64
-	response    *httptest.ResponseRecorder
+	balance  float64
+	response *httptest.ResponseRecorder
 }
 
 func (ac *apiContext) resetResponse(*godog.Scenario) {
