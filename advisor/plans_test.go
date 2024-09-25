@@ -93,3 +93,21 @@ func TestCalculatePlansCompound(t *testing.T) {
 	}
 
 }
+
+func ExamplePlans_CalculatePlans() {
+	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 6, Fee: 1}
+	plans := Plans{Plans: []Plan{plan1, plan2}}
+	bestPlans, _ := plans.CalculatePlans(1000)
+	fmt.Println(bestPlans[0].Name)
+	// Output: Plan 2
+}
+
+func ExamplePlans_CalculatePlans_second() {
+	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 5, Fee: 1}
+	plans := Plans{Plans: []Plan{plan1, plan2}}
+	bestPlans, _ := plans.CalculatePlans(1000)
+	fmt.Println(len(bestPlans))
+	// Output: 2
+}
