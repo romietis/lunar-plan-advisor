@@ -13,13 +13,9 @@ func Home(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }
 
-func GetPlans(c *gin.Context) {
-	planConfig := []advisor.Plan{
-		{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
-		{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
-		{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
-		{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
-	}
+func GetPlans(c *gin.Context, planConfig advisor.Plans) {
+
+	plans := advisor.Plans{Plans: planConfig.Plans}
 
 	balance := c.Query("balance")
 	if balance == "" {
@@ -37,7 +33,7 @@ func GetPlans(c *gin.Context) {
 		return
 	}
 
-	bestPlans, err := advisor.CalculatePlans(balance_float, planConfig)
+	bestPlans, err := plans.CalculatePlans(balance_float)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -45,7 +41,7 @@ func GetPlans(c *gin.Context) {
 		return
 	}
 
-	best := advisor.Best{
+	best := advisor.Plans{
 		Plans: bestPlans,
 	}
 	c.JSON(http.StatusOK, best)
