@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/romietis/lunar-plan-advisor/v2/advisor"
+	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 )
 
 func SetUpRouter() *gin.Engine {
@@ -37,7 +37,17 @@ func TestEndpoint(t *testing.T) {
 
 func TestPlansEndpointValidInput(t *testing.T) {
 	router := SetUpRouter()
-	router.GET("/plans", GetPlans)
+	planConfig := advisor.Plans{
+		Plans: []advisor.Plan{
+			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
+			{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
+		},
+	}
+	router.GET("/plans", func(c *gin.Context) {
+		GetPlans(c, planConfig)
+	})
 
 	w := httptest.NewRecorder()
 	request, err := http.NewRequest(http.MethodGet, "/plans?balance=1000", nil)
@@ -49,7 +59,7 @@ func TestPlansEndpointValidInput(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("wanted response code %v, got %v", http.StatusOK, w.Code)
 	}
-	var expectedJsonStruct advisor.Best
+	var expectedJsonStruct advisor.Plans
 	if err = json.Unmarshal(w.Body.Bytes(), &expectedJsonStruct); err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +70,17 @@ func TestPlansEndpointValidInput(t *testing.T) {
 
 func TestPlansEndpointMissingBalance(t *testing.T) {
 	router := SetUpRouter()
-	router.GET("/plans", GetPlans)
+	planConfig := advisor.Plans{
+		Plans: []advisor.Plan{
+			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
+			{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
+		},
+	}
+	router.GET("/plans", func(ctx *gin.Context) {
+		GetPlans(ctx, planConfig)
+	})
 
 	w := httptest.NewRecorder()
 	request, err := http.NewRequest("GET", "/plans?balance", nil)
@@ -80,7 +100,17 @@ func TestPlansEndpointMissingBalance(t *testing.T) {
 
 func TestPlansEndpointInvalidBalance(t *testing.T) {
 	router := SetUpRouter()
-	router.GET("/plans", GetPlans)
+	planConfig := advisor.Plans{
+		Plans: []advisor.Plan{
+			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
+			{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
+		},
+	}
+	router.GET("/plans", func(ctx *gin.Context) {
+		GetPlans(ctx, planConfig)
+	})
 
 	w := httptest.NewRecorder()
 	request, err := http.NewRequest("GET", "/plans?balance=invalid", nil)
@@ -100,7 +130,17 @@ func TestPlansEndpointInvalidBalance(t *testing.T) {
 
 func TestPlansEndpointNegativeInput(t *testing.T) {
 	router := SetUpRouter()
-	router.GET("/plans", GetPlans)
+	planConfig := advisor.Plans{
+		Plans: []advisor.Plan{
+			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
+			{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
+		},
+	}
+	router.GET("/plans", func(ctx *gin.Context) {
+		GetPlans(ctx, planConfig)
+	})
 
 	w := httptest.NewRecorder()
 	request, err := http.NewRequest("GET", "/plans?balance=-1000", nil)

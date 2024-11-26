@@ -12,8 +12,8 @@ import (
 
 	"github.com/cucumber/godog"
 	"github.com/gin-gonic/gin"
-	"github.com/romietis/lunar-plan-advisor/v2/advisor"
-	"github.com/romietis/lunar-plan-advisor/v2/internal/endpoints"
+	"github.com/romietis/lunar-plan-advisor/v3/advisor"
+	"github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
 )
 
 type apiContext struct {
@@ -35,6 +35,15 @@ func (ac *apiContext) givenBalance(balance string) error {
 }
 
 func (a *apiContext) sendRequestTo(method, endpoint string) error {
+	planConfig := advisor.Plans{
+		Plans: []advisor.Plan{
+			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
+			{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
+		},
+	}
+
 	appendedQuearyParam := fmt.Sprintf("%v?balance=%v", endpoint, a.balance)
 	req, err := http.NewRequest(method, appendedQuearyParam, nil)
 	if err != nil {
@@ -43,7 +52,9 @@ func (a *apiContext) sendRequestTo(method, endpoint string) error {
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-	router.GET(endpoint, endpoints.GetPlans)
+	router.GET(endpoint, func(c *gin.Context) {
+		endpoints.GetPlans(c, planConfig)
+	})
 
 	router.ServeHTTP(a.response, req)
 	return nil
@@ -58,7 +69,7 @@ func (ac *apiContext) responseCodeShouldBe(code int) error {
 }
 
 func (ac *apiContext) responseShouldMatch() error {
-	var expectedJsonStruct advisor.Best
+	var expectedJsonStruct advisor.Plans
 	if err := json.Unmarshal(ac.response.Body.Bytes(), &expectedJsonStruct); err != nil {
 		return err
 	}

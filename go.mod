@@ -1,6 +1,6 @@
-module github.com/romietis/lunar-plan-advisor/v2
+module github.com/romietis/lunar-plan-advisor/v3
 
-go 1.22.3
+go 1.23.3
 
 require (
 	github.com/cucumber/godog v0.14.1

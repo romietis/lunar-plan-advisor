@@ -19,20 +19,20 @@ type Plan struct {
 	AnnualCompoundProfit   float64 `json:"annualCompoundProfit"`
 }
 
-type Best struct {
+type Plans struct {
 	Plans []Plan `json:"plans"`
 }
 
 // CalculatePlans calculates the best investment plans based on the given balance and plan configurations.
 // It returns a slice of plans because multiple plans can have the same maximum profit.
-func CalculatePlans(balance float64, planConfig []Plan) ([]Plan, error) {
+func (plans *Plans) CalculatePlans(balance float64) ([]Plan, error) {
 	if balance < 0 {
 		return nil, errors.New("balance can't be negative")
 	}
 	var bestPlans []Plan
 	maxProfit := math.SmallestNonzeroFloat64
 
-	for _, plan := range planConfig {
+	for _, plan := range plans.Plans {
 		var effectiveBalance float64
 		if plan.Cap != 0 && plan.Cap < balance {
 			effectiveBalance = plan.Cap
