@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/romietis/lunar-plan-advisor/v2/advisor"
+	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 
 	"github.com/gin-gonic/gin"
 )

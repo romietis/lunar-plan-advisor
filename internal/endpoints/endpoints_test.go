@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/romietis/lunar-plan-advisor/v2/advisor"
+	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 )
 
 func SetUpRouter() *gin.Engine {
