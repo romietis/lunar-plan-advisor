@@ -103,7 +103,7 @@ func ExamplePlans_CalculatePlans() {
 	// Output: Plan 2
 }
 
-func ExamplePlans_CalculatePlans_second() {
+func ExamplePlans_CalculatePlans_two_best_plans() {
 	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
 	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 5, Fee: 1}
 	plans := Plans{Plans: []Plan{plan1, plan2}}
