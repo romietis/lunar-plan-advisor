@@ -1,9 +1,9 @@
 ## Lunar Plan Advisor
 
 [![Test](https://github.com/romietis/lunar-plan-advisor/actions/workflows/test.yaml/badge.svg)](https://github.com/romietis/lunar-plan-advisor/actions/workflows/test.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/romietis/lunar-plan-advisor/v2)](https://goreportcard.com/report/github.com/romietis/lunar-plan-advisor/v2)
+[![Go Report Card](https://goreportcard.com/badge/github.com/romietis/lunar-plan-advisor/v3)](https://goreportcard.com/report/github.com/romietis/lunar-plan-advisor/v3)
 [![codecov](https://codecov.io/github/romietis/lunar-plan-advisor/graph/badge.svg?token=7TL3J6GCYT)](https://codecov.io/github/romietis/lunar-plan-advisor)
-[![Go Reference](https://pkg.go.dev/badge/github.com/romietis/lunar-plan-advisor/v2.svg)](https://pkg.go.dev/github.com/romietis/lunar-plan-advisor/v2)
+[![Go Reference](https://pkg.go.dev/badge/github.com/romietis/lunar-plan-advisor/v3.svg)](https://pkg.go.dev/github.com/romietis/lunar-plan-advisor/v3)
 [![GitHub Release](https://img.shields.io/github/v/release/romietis/lunar-plan-advisor)](https://github.com/romietis/lunar-plan-advisor/releases)
 
 
