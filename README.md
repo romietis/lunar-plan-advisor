@@ -28,6 +28,23 @@ docker run -p 8080:8080 lunar-plan-advisor
 ```
 Your application will be available at localhost:8080 and 0.0.0.0:8080
 
+### Tests
+
+Run unit tests
+```bash
+go test -v -shuffle=on -coverprofile=cover.out ./internal/endpoints/... ./advisor/...
+```
+
+View coverage report
+```bash
+go tool cover -html=cover.out
+```
+
+Run BDD tests
+```bash
+go test -v ./internal/bdd/...
+```
+
 ## API
 Now exposing API endpoint with query parameter `balance`
 
