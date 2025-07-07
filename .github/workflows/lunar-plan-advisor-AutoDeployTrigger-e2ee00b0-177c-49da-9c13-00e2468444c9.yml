@@ -1,0 +1,49 @@
+name: Trigger auto deployment for lunar-plan-advisor
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/lunar-plan-advisor-AutoDeployTrigger-e2ee00b0-177c-49da-9c13-00e2468444c9.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.LUNARPLANADVISOR_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.LUNARPLANADVISOR_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.LUNARPLANADVISOR_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}
+          _dockerfilePathKey_: _dockerfilePath_
+          _targetLabelKey_: _targetLabel_
+          registryUrl: lunarplanadvisorregistry.azurecr.io
+          registryUsername: ${{ secrets.LUNARPLANADVISOR_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.LUNARPLANADVISOR_REGISTRY_PASSWORD }}
+          containerAppName: lunar-plan-advisor
+          resourceGroup: lunar-plan-advisor
+          imageToBuild: lunarplanadvisorregistry.azurecr.io/lunar-plan-advisor:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
