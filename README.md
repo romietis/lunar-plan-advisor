@@ -68,5 +68,3 @@ comparing the net profits of different plans.
 
 ## Privacy
 Your data is not stored or sent to anyone.
-
-
