@@ -28,5 +28,5 @@ jobs:
         with:
           appSourcePath: ${{ github.workspace }}
           acrName: lunar
-          containerAppName: lunar-plan-advisor-app
+          containerAppName: lunar-app
           resourceGroup: lunar-plan-advisor
