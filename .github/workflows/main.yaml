@@ -27,6 +27,6 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           appSourcePath: ${{ github.workspace }}
-          acrName: lunarplanadvisorregistry
-          containerAppName: lunar-plan-advisor
-          resourceGroup: LunarPlanAdvisor
+          acrName: lunar
+          containerAppName: lunar-plan-advisor-app
+          resourceGroup: lunar-plan-advisor
