@@ -57,3 +57,7 @@ func (plans *Plans) CalculatePlans(balance float64) ([]Plan, error) {
 	}
 	return bestPlans, nil
 }
+
+func (plans *Plans) UpdatePlans(newPlans Plans) {
+	plans.Plans = newPlans.Plans
+}
