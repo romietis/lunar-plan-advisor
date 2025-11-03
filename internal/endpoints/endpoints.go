@@ -47,3 +47,19 @@ func GetPlans(c *gin.Context, planConfig advisor.Plans) {
 	c.JSON(http.StatusOK, best)
 
 }
+
+func PostMyConfig(c *gin.Context, planConfig *advisor.Plans) {
+	var userPlans advisor.Plans
+	err := c.ShouldBindBodyWithJSON(&userPlans)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	planConfig.UpdatePlans(userPlans)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "custom plan configuration updated successfully",
+	})
+
+}

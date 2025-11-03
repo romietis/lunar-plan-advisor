@@ -152,3 +152,35 @@ func TestPlansEndpointNegativeInput(t *testing.T) {
 		t.Errorf("wanted response code %v, got %v", http.StatusBadRequest, w.Code)
 	}
 }
+
+func TestPostMyConfig(t *testing.T) {
+	router := SetUpRouter()
+	planConfig := advisor.Plans{
+		Plans: []advisor.Plan{
+			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
+			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
+			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
+			{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
+		},
+	}
+
+	myNewConfig := `{"plans":[{"name": "test", "annualInterestRate": 1.00, "fee": 0.0, "cap": 0.0}]}`
+
+	router.POST("/myconfig", func(ctx *gin.Context) {
+		PostMyConfig(ctx, &planConfig)
+	})
+
+	w := httptest.NewRecorder()
+	request, err := http.NewRequest(http.MethodPost, "/myconfig", strings.NewReader(myNewConfig))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+
+	router.ServeHTTP(w, request)
+
+	if planConfig.Plans[0].Name != "test" {
+		t.Errorf("wanted plan name: test, got: %s, config wasn't updated, error: %v", planConfig.Plans[0].Name, w.Body)
+	}
+}

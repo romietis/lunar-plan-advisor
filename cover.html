@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>advisor: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/romietis/lunar-plan-advisor/v3/advisor/plans.go (100.0%)</option>
+				
+				<option value="file1">github.com/romietis/lunar-plan-advisor/v3/cmd/web/main.go (0.0%)</option>
+				
+				<option value="file2">github.com/romietis/lunar-plan-advisor/v3/internal/endpoints/endpoints.go (91.3%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package advisor
+
+import (
+        "errors"
+        "math"
+)
+
+type Plan struct {
+        Name                   string  `json:"name"`
+        AnnualInterestRate     float64 `json:"annualInterestRate"`
+        Fee                    float64 `json:"fee"`
+        Cap                    float64 `json:"cap"`
+        AnnualFee              float64 `json:"annualFee"`
+        AnnualInterest         float64 `json:"annualInterest"`
+        MonthlyInterest        float64 `json:"monthlyInterest"`
+        AnnualInterestProfit   float64 `json:"annualInterestProfit"`
+        MonthlyInterestProfit  float64 `json:"monthlyInterestProfit"`
+        AnnualCompoundInterest float64 `json:"annualCompoundInterest"`
+        AnnualCompoundProfit   float64 `json:"annualCompoundProfit"`
+}
+
+type Plans struct {
+        Plans []Plan `json:"plans"`
+}
+
+// CalculatePlans calculates the best investment plans based on the given balance and plan configurations.
+// It returns a slice of plans because multiple plans can have the same maximum profit.
+func (plans *Plans) CalculatePlans(balance float64) ([]Plan, error) <span class="cov8" title="1">{
+        if balance &lt; 0 </span><span class="cov8" title="1">{
+                return nil, errors.New("balance can't be negative")
+        }</span>
+        <span class="cov8" title="1">var bestPlans []Plan
+        maxProfit := math.SmallestNonzeroFloat64
+
+        for _, plan := range plans.Plans </span><span class="cov8" title="1">{
+                var effectiveBalance float64
+                if plan.Cap != 0 &amp;&amp; plan.Cap &lt; balance </span><span class="cov8" title="1">{
+                        effectiveBalance = plan.Cap
+                }</span> else<span class="cov8" title="1"> {
+                        effectiveBalance = balance
+                }</span>
+
+                <span class="cov8" title="1">plan.AnnualInterest = (effectiveBalance * plan.AnnualInterestRate) / 100
+                plan.MonthlyInterest = plan.AnnualInterest / 12
+                plan.AnnualFee = plan.Fee * 12
+                plan.AnnualInterestProfit = plan.AnnualInterest - plan.AnnualFee
+                plan.MonthlyInterestProfit = plan.AnnualInterestProfit / 12
+                plan.AnnualCompoundInterest = effectiveBalance*math.Pow(1+(plan.AnnualInterestRate/100)/12, 12) - effectiveBalance
+                plan.AnnualCompoundProfit = plan.AnnualCompoundInterest - plan.AnnualFee
+
+                if plan.AnnualCompoundProfit &gt; maxProfit </span><span class="cov8" title="1">{
+                        maxProfit = plan.AnnualCompoundProfit
+                        bestPlans = []Plan{plan}
+                }</span> else<span class="cov8" title="1"> if plan.AnnualCompoundProfit == maxProfit </span><span class="cov8" title="1">{
+                        bestPlans = append(bestPlans, plan)
+                }</span>
+        }
+        <span class="cov8" title="1">return bestPlans, nil</span>
+}
+
+func (plans *Plans) UpdatePlans(newPlans Plans) <span class="cov8" title="1">{
+        plans.Plans = newPlans.Plans
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package main
+
+import (
+        "net/http"
+
+        "github.com/romietis/lunar-plan-advisor/v3/advisor"
+        "github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
+
+        "github.com/gin-gonic/gin"
+)
+
+func main() <span class="cov0" title="0">{
+        planConfig := advisor.Plans{
+                Plans: []advisor.Plan{
+                        {Name: "Light", AnnualInterestRate: 0.75, Fee: 0.0, Cap: 100000},
+                        {Name: "Standard", AnnualInterestRate: 1.0, Fee: 29.0, Cap: 100000},
+                        {Name: "Plus", AnnualInterestRate: 1.25, Fee: 69.0, Cap: 0},
+                        {Name: "Unlimited", AnnualInterestRate: 1.75, Fee: 139.0, Cap: 0},
+                },
+        }
+
+        router := gin.Default()
+
+        // Static assets
+        router.LoadHTMLGlob("assets/templates/*")
+        router.Static("/css", "assets/css")
+        router.Static("/js", "assets/js")
+
+        // Google Search Console
+        router.GET("/google0c4ea5396b01145c.html", func(c *gin.Context) </span><span class="cov0" title="0">{
+                c.HTML(http.StatusOK, "google0c4ea5396b01145c.html", nil)
+        }</span>)
+
+        // Serve script
+        <span class="cov0" title="0">router.GET("/", endpoints.Home)
+
+        // Public endpoint to fetch plans
+        router.GET("/plans", func(c *gin.Context) </span><span class="cov0" title="0">{
+                endpoints.GetPlans(c, planConfig)
+        }</span>)
+
+        <span class="cov0" title="0">router.POST("/myconfig", func(c *gin.Context) </span><span class="cov0" title="0">{
+                endpoints.PostMyConfig(c, &amp;planConfig)
+        }</span>)
+
+        <span class="cov0" title="0">router.Run()</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package endpoints
+
+import (
+        "net/http"
+        "strconv"
+
+        "github.com/romietis/lunar-plan-advisor/v3/advisor"
+
+        "github.com/gin-gonic/gin"
+)
+
+func Home(c *gin.Context) <span class="cov8" title="1">{
+        c.HTML(http.StatusOK, "index.html", nil)
+}</span>
+
+func GetPlans(c *gin.Context, planConfig advisor.Plans) <span class="cov8" title="1">{
+
+        plans := advisor.Plans{Plans: planConfig.Plans}
+
+        balance := c.Query("balance")
+        if balance == "" </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{
+                        "error": "balance is required",
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">balance_float, err := strconv.ParseFloat(balance, 64)
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{
+                        "error": "invalid input",
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">bestPlans, err := plans.CalculatePlans(balance_float)
+        if err != nil </span><span class="cov8" title="1">{
+                c.JSON(http.StatusBadRequest, gin.H{
+                        "error": err.Error(),
+                })
+                return
+        }</span>
+
+        <span class="cov8" title="1">best := advisor.Plans{
+                Plans: bestPlans,
+        }
+        c.JSON(http.StatusOK, best)</span>
+
+}
+
+func PostMyConfig(c *gin.Context, planConfig *advisor.Plans) <span class="cov8" title="1">{
+        var userPlans advisor.Plans
+        err := c.ShouldBindBodyWithJSON(&amp;userPlans)
+        if err != nil </span><span class="cov0" title="0">{
+                c.JSON(http.StatusBadRequest, gin.H{
+                        "error": err.Error(),
+                })
+                return
+        }</span>
+        <span class="cov8" title="1">planConfig.UpdatePlans(userPlans)
+        c.JSON(http.StatusOK, gin.H{
+                "message": "custom plan configuration updated successfully",
+        })</span>
+
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

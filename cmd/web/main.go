@@ -39,6 +39,10 @@ func main() {
 		endpoints.GetPlans(c, planConfig)
 	})
 
+	router.POST("/myconfig", func(c *gin.Context) {
+		endpoints.PostMyConfig(c, &planConfig)
+	})
+
 	router.Run()
 
 }
