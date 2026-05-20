@@ -12,6 +12,16 @@
         <button onclick="calculateBestPlans()">Calculate Best Plans 📈</button>
         <button onclick="window.location.href='https://github.com/romietis/lunar-plan-advisor/wiki#welcome-to-lunar-plan-advisor'">ℹ️</button>
         <div id="best-plans"></div>
+
+        <details id="config-panel">
+            <summary>Current plan configuration</summary>
+            <textarea id="current-config" spellcheck="false"></textarea>
+            <button onclick="saveConfig()">Save</button>
+            <input type="file" id="import-file" accept="application/json" style="display:none" onchange="importConfig(this.files[0])">
+            <button onclick="document.getElementById('import-file').click()">Import config</button>
+            <button onclick="exportConfig()">Export config</button>
+            <button onclick="resetConfig()">Reset to defaults</button>
+        </details>
     </div>
     <script src="../js/script.js"></script>
 </body>

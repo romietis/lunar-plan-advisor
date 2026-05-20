@@ -1,16 +1,82 @@
-// Function to call localhost endpoint
-function calculateBestPlans() {
-    var balanceText = document.getElementById("balance").value.trim();
-    var balance = parseFloat(balanceText);
+// Load the user's plan configuration, seeding from server defaults on first visit.
+async function getPlans() {
+    const cached = localStorage.getItem("plans");
+    if (cached) return JSON.parse(cached);
+    const fresh = await fetch("/plans").then(r => r.json());
+    localStorage.setItem("plans", JSON.stringify(fresh));
+    return fresh;
+}
+
+function importConfig(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            if (!Array.isArray(parsed.plans)) throw new Error("missing 'plans' array");
+            localStorage.setItem("plans", JSON.stringify(parsed));
+            renderCurrentConfig();
+            alert("Config imported");
+        } catch (err) {
+            alert("Invalid config: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+}
+
+function exportConfig() {
+    const data = localStorage.getItem("plans") || "{}";
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
+    a.download = "plans.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+}
+
+async function resetConfig() {
+    localStorage.removeItem("plans");
+    await getPlans();
+    renderCurrentConfig();
+    alert("Config reset to defaults");
+}
+
+async function renderCurrentConfig() {
+    const target = document.getElementById("current-config");
+    if (!target) return;
+    const cfg = await getPlans();
+    target.value = JSON.stringify(cfg, null, 2);
+}
+
+function saveConfig() {
+    const target = document.getElementById("current-config");
+    try {
+        const parsed = JSON.parse(target.value);
+        if (!Array.isArray(parsed.plans)) throw new Error("missing 'plans' array");
+        localStorage.setItem("plans", JSON.stringify(parsed));
+        alert("Config saved");
+    } catch (err) {
+        alert("Invalid config: " + err.message);
+    }
+}
+
+async function calculateBestPlans() {
+    const balance = parseFloat(document.getElementById("balance").value.trim());
     if (isNaN(balance)) {
         alert("Please enter a valid balance");
         return;
     }
-    fetch("/plans?balance=" + balance)
-    .then(response => response.json())
-    .then(data => {
-        displayBestPlans(data.plans);
-    })
+    const cfg = await getPlans();
+    const res = await fetch("/plans/best", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ balance, plans: cfg.plans }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        alert("Calculation failed: " + (err.error || res.statusText));
+        return;
+    }
+    const data = await res.json();
+    displayBestPlans(data.plans);
 }
 
 // Function to display the best plans
@@ -46,7 +112,7 @@ function displayBestPlans(plans) {
             var monthlyProfit = document.createElement("p");
             monthlyProfit.textContent = "Monthly interest after fee: " + plan.monthlyInterestProfit.toFixed(2);
             div.appendChild(monthlyProfit);
-            
+
             var annualCompoundInterest = document.createElement("p");
             annualCompoundInterest.textContent = "Annual compound interest: " + plan.annualCompoundInterest.toFixed(2);
             div.appendChild(annualCompoundInterest);
@@ -59,3 +125,5 @@ function displayBestPlans(plans) {
         });
     }
 }
+
+window.addEventListener("DOMContentLoaded", renderCurrentConfig);

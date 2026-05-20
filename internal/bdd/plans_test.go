@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -35,8 +36,8 @@ func (ac *apiContext) givenBalance(balance string) error {
 }
 
 func (a *apiContext) sendRequestTo(method, endpoint string) error {
-	planConfig := advisor.Plans{
-		Plans: []advisor.Plan{
+	defaults := advisor.PlansConfig{
+		Plans: []advisor.PlanConfig{
 			{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
 			{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
 			{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
@@ -44,16 +45,17 @@ func (a *apiContext) sendRequestTo(method, endpoint string) error {
 		},
 	}
 
-	appendedQuearyParam := fmt.Sprintf("%v?balance=%v", endpoint, a.balance)
-	req, err := http.NewRequest(method, appendedQuearyParam, nil)
+	body := fmt.Sprintf(`{"balance":%v}`, a.balance)
+	req, err := http.NewRequest(method, endpoint, strings.NewReader(body))
 	if err != nil {
 		return err
 	}
+	req.Header.Set("Content-Type", "application/json")
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-	router.GET(endpoint, func(c *gin.Context) {
-		endpoints.GetPlans(c, planConfig)
+	router.POST(endpoint, func(c *gin.Context) {
+		endpoints.PostBestPlans(c, defaults)
 	})
 
 	router.ServeHTTP(a.response, req)
