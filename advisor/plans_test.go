@@ -2,11 +2,12 @@ package advisor
 
 import (
 	"fmt"
+	"math"
 	"testing"
 )
 
 func TestCalculatePlans_NegativeBalance(t *testing.T) {
-	plans := Plans{}
+	plans := PlansConfig{}
 	_, err := plans.CalculatePlans(-1)
 	if err == nil || err.Error() != "balance can't be negative" {
 		t.Errorf("Expected error for negative balance, got %v", err)
@@ -14,7 +15,7 @@ func TestCalculatePlans_NegativeBalance(t *testing.T) {
 }
 
 func TestCalculatePlansNoPlans(t *testing.T) {
-	plans := Plans{}
+	plans := PlansConfig{}
 	bestPlans, _ := plans.CalculatePlans(1000)
 	if len(bestPlans) != 0 {
 		t.Errorf("Expected no plans, got %v", bestPlans)
@@ -22,8 +23,8 @@ func TestCalculatePlansNoPlans(t *testing.T) {
 }
 
 func TestCalculatePlansSinglePlan(t *testing.T) {
-	plan := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
-	plans := Plans{Plans: []Plan{plan}}
+	plan := PlanConfig{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plans := PlansConfig{Plans: []PlanConfig{plan}}
 	bestPlans, _ := plans.CalculatePlans(1000)
 	if len(bestPlans) != 1 || bestPlans[0].Name != "Plan 1" {
 		t.Errorf("Expected Plan 1, got %v", bestPlans)
@@ -31,9 +32,9 @@ func TestCalculatePlansSinglePlan(t *testing.T) {
 }
 
 func TestCalculatePlansMultiplePlans(t *testing.T) {
-	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
-	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 6, Fee: 1}
-	plans := Plans{Plans: []Plan{plan1, plan2}}
+	plan1 := PlanConfig{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plan2 := PlanConfig{Name: "Plan 2", AnnualInterestRate: 6, Fee: 1}
+	plans := PlansConfig{Plans: []PlanConfig{plan1, plan2}}
 	bestPlans, _ := plans.CalculatePlans(1000)
 	if len(bestPlans) != 1 || bestPlans[0].Name != "Plan 2" {
 		t.Errorf("Expected Plan 2, got %v", bestPlans)
@@ -41,9 +42,9 @@ func TestCalculatePlansMultiplePlans(t *testing.T) {
 }
 
 func TestCalculatePlansMultipleBestPlans(t *testing.T) {
-	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
-	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 5, Fee: 1}
-	plans := Plans{Plans: []Plan{plan1, plan2}}
+	plan1 := PlanConfig{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plan2 := PlanConfig{Name: "Plan 2", AnnualInterestRate: 5, Fee: 1}
+	plans := PlansConfig{Plans: []PlanConfig{plan1, plan2}}
 	bestPlans, _ := plans.CalculatePlans(1000)
 	if len(bestPlans) != 2 || bestPlans[0].Name != "Plan 1" || bestPlans[1].Name != "Plan 2" {
 		t.Errorf("Expected Plan 1 and Plan 2, got %v", bestPlans)
@@ -51,9 +52,9 @@ func TestCalculatePlansMultipleBestPlans(t *testing.T) {
 }
 
 func TestCalculatePlansEffectiveBalanceIsCap(t *testing.T) {
-	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 1.5, Fee: 0, Cap: 1000}
-	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 2.25, Fee: 119, Cap: 0}
-	plans := Plans{Plans: []Plan{plan1, plan2}}
+	plan1 := PlanConfig{Name: "Plan 1", AnnualInterestRate: 1.5, Fee: 0, Cap: 1000}
+	plan2 := PlanConfig{Name: "Plan 2", AnnualInterestRate: 2.25, Fee: 119, Cap: 0}
+	plans := PlansConfig{Plans: []PlanConfig{plan1, plan2}}
 	bestPlans, _ := plans.CalculatePlans(1001)
 	if len(bestPlans) != 1 || bestPlans[0].Name != "Plan 1" {
 		t.Errorf("Expected Plan 1, got %v", plans)
@@ -61,13 +62,13 @@ func TestCalculatePlansEffectiveBalanceIsCap(t *testing.T) {
 }
 
 func TestCalculatePlansCompound(t *testing.T) {
-	planConfig := []Plan{
+	planConfig := []PlanConfig{
 		{Name: "Light", AnnualInterestRate: 1.25, Fee: 0.0, Cap: 100000},
 		{Name: "Standard", AnnualInterestRate: 1.5, Fee: 29.0, Cap: 100000},
 		{Name: "Plus", AnnualInterestRate: 1.75, Fee: 69.0, Cap: 0},
 		{Name: "Unlimited", AnnualInterestRate: 2.25, Fee: 139.0, Cap: 0},
 	}
-	plans := Plans{Plans: planConfig}
+	plans := PlansConfig{Plans: planConfig}
 
 	testCases := []struct {
 		balance                  float64
@@ -93,42 +94,45 @@ func TestCalculatePlansCompound(t *testing.T) {
 	}
 
 }
-func TestUpdatePlans(t *testing.T) {
-	planConfig := Plans{
-		Plans: []Plan{
-			{Name: "Light", AnnualInterestRate: 0.75, Fee: 0.0, Cap: 100000},
-			{Name: "Standard", AnnualInterestRate: 1.0, Fee: 29.0, Cap: 100000},
-			{Name: "Plus", AnnualInterestRate: 1.25, Fee: 69.0, Cap: 0},
-			{Name: "Unlimited", AnnualInterestRate: 1.75, Fee: 139.0, Cap: 0},
-		},
-	}
 
-	updatedPlanConfig := Plans{
-		Plans: []Plan{
-			{Name: "test", AnnualInterestRate: 1.00, Fee: 0.0, Cap: 0.0},
-		},
+func TestValidate(t *testing.T) {
+	tests := []struct {
+		name    string
+		plans   PlansConfig
+		wantErr bool
+	}{
+		{"empty list", PlansConfig{}, true},
+		{"empty name", PlansConfig{Plans: []PlanConfig{{Name: "", AnnualInterestRate: 1}}}, true},
+		{"negative rate", PlansConfig{Plans: []PlanConfig{{Name: "A", AnnualInterestRate: -1}}}, true},
+		{"negative fee", PlansConfig{Plans: []PlanConfig{{Name: "A", Fee: -1}}}, true},
+		{"negative cap", PlansConfig{Plans: []PlanConfig{{Name: "A", Cap: -1}}}, true},
+		{"NaN rate", PlansConfig{Plans: []PlanConfig{{Name: "A", AnnualInterestRate: math.NaN()}}}, true},
+		{"Inf fee", PlansConfig{Plans: []PlanConfig{{Name: "A", Fee: math.Inf(1)}}}, true},
+		{"valid", PlansConfig{Plans: []PlanConfig{{Name: "A", AnnualInterestRate: 1, Fee: 0, Cap: 0}}}, false},
 	}
-	planConfig.UpdatePlans(updatedPlanConfig)
-
-	if planConfig.Plans[0].Name != "test" {
-		t.Errorf("want: test, got %s", planConfig.Plans[0].Name)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			err := tc.plans.Validate()
+			if (err != nil) != tc.wantErr {
+				t.Errorf("Validate() err = %v, wantErr %v", err, tc.wantErr)
+			}
+		})
 	}
-
 }
 
-func ExamplePlans_CalculatePlans() {
-	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
-	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 6, Fee: 1}
-	plans := Plans{Plans: []Plan{plan1, plan2}}
+func ExamplePlansConfig_CalculatePlans() {
+	plan1 := PlanConfig{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plan2 := PlanConfig{Name: "Plan 2", AnnualInterestRate: 6, Fee: 1}
+	plans := PlansConfig{Plans: []PlanConfig{plan1, plan2}}
 	bestPlans, _ := plans.CalculatePlans(1000)
 	fmt.Println(bestPlans[0].Name)
 	// Output: Plan 2
 }
 
-func ExamplePlans_CalculatePlans_two_best_plans() {
-	plan1 := Plan{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
-	plan2 := Plan{Name: "Plan 2", AnnualInterestRate: 5, Fee: 1}
-	plans := Plans{Plans: []Plan{plan1, plan2}}
+func ExamplePlansConfig_CalculatePlans_two_best_plans() {
+	plan1 := PlanConfig{Name: "Plan 1", AnnualInterestRate: 5, Fee: 1}
+	plan2 := PlanConfig{Name: "Plan 2", AnnualInterestRate: 5, Fee: 1}
+	plans := PlansConfig{Plans: []PlanConfig{plan1, plan2}}
 	bestPlans, _ := plans.CalculatePlans(1000)
 	fmt.Println(len(bestPlans))
 	// Output: 2

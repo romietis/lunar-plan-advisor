@@ -46,11 +46,25 @@ go test -v ./internal/bdd/...
 ```
 
 ## API
-Now exposing API endpoint with query parameter `balance`
+
+`GET /plans` returns the built-in default plan configuration:
 
 ```bash
-curl https://lunar-plan-advisor.calmground-6bcda4d8.northeurope.azurecontainerapps.io/plans?balance=100000
+curl http://localhost:8080/plans
 ```
+
+`POST /plans/best` returns the best plan(s) for a given balance. Omit `plans`
+to calculate against the server defaults, or pass your own to calculate against
+a customized configuration:
+
+```bash
+curl -X POST http://localhost:8080/plans/best \
+    -H 'Content-Type: application/json' \
+    -d '{"balance": 100000}'
+```
+
+The web UI stores any customized configuration in the browser's `localStorage`
+— it is never persisted on the server.
 
 ## Background
 

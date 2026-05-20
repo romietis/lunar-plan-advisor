@@ -1,21 +1,33 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    padding: 20px 0;
     background-color: #f0f0f0;
 }
 
 #container {
     width: 80%;
     max-width: 600px;
+    margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#current-config {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    height: 300px;
+    margin: 10px 0;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    resize: vertical;
 }
 
 input[type="text"],

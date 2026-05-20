@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	planConfig := advisor.Plans{
-		Plans: []advisor.Plan{
+	defaults := advisor.PlansConfig{
+		Plans: []advisor.PlanConfig{
 			{Name: "Light", AnnualInterestRate: 0.75, Fee: 0.0, Cap: 100000},
 			{Name: "Standard", AnnualInterestRate: 1.0, Fee: 29.0, Cap: 100000},
 			{Name: "Plus", AnnualInterestRate: 1.25, Fee: 69.0, Cap: 0},
@@ -34,13 +34,14 @@ func main() {
 	// Serve script
 	router.GET("/", endpoints.Home)
 
-	// Public endpoint to fetch plans
+	// Return the built-in default plan configuration
 	router.GET("/plans", func(c *gin.Context) {
-		endpoints.GetPlans(c, planConfig)
+		endpoints.GetPlans(c, defaults)
 	})
 
-	router.POST("/myconfig", func(c *gin.Context) {
-		endpoints.PostMyConfig(c, &planConfig)
+	// Calculate best plan(s) for a balance against the supplied (or default) plans
+	router.POST("/plans/best", func(c *gin.Context) {
+		endpoints.PostBestPlans(c, defaults)
 	})
 
 	router.Run()

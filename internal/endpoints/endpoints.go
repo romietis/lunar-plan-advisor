@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 
@@ -13,53 +12,43 @@ func Home(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", nil)
 }
 
-func GetPlans(c *gin.Context, planConfig advisor.Plans) {
-
-	plans := advisor.Plans{Plans: planConfig.Plans}
-
-	balance := c.Query("balance")
-	if balance == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "balance is required",
-		})
-		return
-	}
-
-	balance_float, err := strconv.ParseFloat(balance, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid input",
-		})
-		return
-	}
-
-	bestPlans, err := plans.CalculatePlans(balance_float)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	best := advisor.Plans{
-		Plans: bestPlans,
-	}
-	c.JSON(http.StatusOK, best)
-
+// GetPlans returns the built-in default plan configuration. The UI uses this
+// to seed first-time visitors and as the "reset to defaults" source.
+func GetPlans(c *gin.Context, defaults advisor.PlansConfig) {
+	c.JSON(http.StatusOK, defaults)
 }
 
-func PostMyConfig(c *gin.Context, planConfig *advisor.Plans) {
-	var userPlans advisor.Plans
-	err := c.ShouldBindBodyWithJSON(&userPlans)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+type bestPlansRequest struct {
+	Balance *float64             `json:"balance"`
+	Plans   []advisor.PlanConfig `json:"plans"`
+}
+
+// PostBestPlans calculates the best plan(s) for a given balance against a
+// plan configuration supplied in the request body. When Plans is omitted, the
+// server-side defaults are used so the endpoint stays usable without a config.
+func PostBestPlans(c *gin.Context, defaults advisor.PlansConfig) {
+	var req bestPlansRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	planConfig.UpdatePlans(userPlans)
-	c.JSON(http.StatusOK, gin.H{
-		"message": "custom plan configuration updated successfully",
-	})
+	if req.Balance == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "balance is required"})
+		return
+	}
 
+	config := advisor.PlansConfig{Plans: req.Plans}
+	if len(config.Plans) == 0 {
+		config = defaults
+	} else if err := config.Validate(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	bestPlans, err := config.CalculatePlans(*req.Balance)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, advisor.Plans{Plans: bestPlans})
 }
