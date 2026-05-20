@@ -6,7 +6,7 @@ async function getPlans() {
     localStorage.setItem("plans", JSON.stringify(fresh));
     return fresh;
 }
-
+ 
 function importConfig(file) {
     const reader = new FileReader();
     reader.onload = e => {

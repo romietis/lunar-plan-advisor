@@ -26,6 +26,17 @@ or run with Docker
 docker build -t lunar-plan-advisor .
 docker run -p 8080:8080 lunar-plan-advisor
 ```
+
+or via the Makefile shortcuts:
+
+```bash
+make build   # build the Docker image
+make run     # run the container (detached) on port 8080
+make stop    # stop and remove the container
+make test    # run unit tests
+make e2e     # run end-to-end (BDD) tests
+```
+
 Your application will be available at localhost:8080 and 0.0.0.0:8080
 
 ### Tests
@@ -40,7 +51,7 @@ View coverage report
 go tool cover -html=cover.out
 ```
 
-Run BDD tests
+Run end-to-end (BDD) tests
 ```bash
 go test -v ./internal/bdd/...
 ```
@@ -63,8 +74,14 @@ curl -X POST http://localhost:8080/plans/best \
     -d '{"balance": 100000}'
 ```
 
-The web UI stores any customized configuration in the browser's `localStorage`
-— it is never persisted on the server.
+## Custom plan configuration
+
+The web UI lets you edit the plan list (rates, fees, caps) directly in the
+browser. Your edits are stored in the browser's `localStorage` under the key
+`plans` — scoped to the origin (e.g. `http://localhost:8080`), persistent
+across refreshes, and never sent to the server except as part of a single
+calculation request. The server itself stores no per-user configuration, so
+clearing site data or switching browsers resets you to the built-in defaults.
 
 ## Background
 
