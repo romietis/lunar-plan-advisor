@@ -14,7 +14,7 @@ build:
 	docker build -t $(IMAGE) .
 
 run:
-	docker run -d --rm --name $(IMAGE) -p $(PORT):$(PORT) $(IMAGE)
+	docker run --rm --name $(IMAGE) -p $(PORT):$(PORT) $(IMAGE)
 
 stop:
 	-docker stop $(IMAGE)

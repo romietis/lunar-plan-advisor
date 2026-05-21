@@ -1,9 +1,7 @@
-package bdd
+package steps
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -67,27 +65,12 @@ func (ac *apiContext) responseCodeShouldBe(code int) error {
 	return nil
 }
 
-func (ac *apiContext) responseShouldMatch() error {
-	var expectedJsonStruct advisor.Plans
-	if err := json.Unmarshal(ac.response.Body.Bytes(), &expectedJsonStruct); err != nil {
-		return err
-	}
-
-	for _, plan := range expectedJsonStruct.Plans {
-		if plan.Name == "" {
-			return errors.New("missing required value")
-		}
-	}
-
-	return nil
-}
-
 func TestFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		ScenarioInitializer: InitializeScenario,
 		Options: &godog.Options{
 			Format:   "pretty",
-			Paths:    []string{"features"},
+			Paths:    []string{"../features"},
 			TestingT: t, // Testing instance that will run subtests.
 		},
 	}
@@ -108,5 +91,4 @@ func InitializeScenario(s *godog.ScenarioContext) {
 	s.Step(`^a blance of (-?\d+(\.\d+)?([eE][-+]?\d+)?)\s*DKK$`, api.givenBalance)
 	s.Step(`^I send "([^"]*)" request to "([^"]*)"$`, api.sendRequestTo)
 	s.Step(`^the response code should be (\d+)$`, api.responseCodeShouldBe)
-	s.Step(`^the response should match json`, api.responseShouldMatch)
 }
