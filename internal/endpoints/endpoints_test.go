@@ -31,11 +31,11 @@ func newTestHandler() *Handler {
 }
 
 func TestHome(t *testing.T) {
-	h := newTestHandler()
+	handlers := newTestHandler()
 
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	h.Home(w, req)
+	handlers.Home(w, req)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("wanted response code %v, got %v", http.StatusOK, w.Code)
@@ -43,11 +43,11 @@ func TestHome(t *testing.T) {
 }
 
 func TestGetPlansReturnsDefaults(t *testing.T) {
-	h := newTestHandler()
+	handlers := newTestHandler()
 
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/plans", nil)
-	h.GetPlans(w, req)
+	handlers.GetPlans(w, req)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("wanted response code %v, got %v", http.StatusOK, w.Code)
@@ -56,8 +56,8 @@ func TestGetPlansReturnsDefaults(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	if len(got.Plans) != len(h.Defaults.Plans) {
-		t.Errorf("wanted %d plans, got %d", len(h.Defaults.Plans), len(got.Plans))
+	if len(got.Plans) != len(handlers.Defaults.Plans) {
+		t.Errorf("wanted %d plans, got %d", len(handlers.Defaults.Plans), len(got.Plans))
 	}
 	if got.Plans[0].Name != "Light" {
 		t.Errorf("wanted first plan Light, got %s", got.Plans[0].Name)
@@ -66,11 +66,11 @@ func TestGetPlansReturnsDefaults(t *testing.T) {
 
 func postBest(t *testing.T, body string) *httptest.ResponseRecorder {
 	t.Helper()
-	h := newTestHandler()
+	handlers := newTestHandler()
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodPost, "/plans/best", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
-	h.PostBestPlans(w, req)
+	handlers.PostBestPlans(w, req)
 	return w
 }
 
