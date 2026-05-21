@@ -40,6 +40,27 @@ func TestHome(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("wanted response code %v, got %v", http.StatusOK, w.Code)
 	}
+	if ct := w.Header().Get("Content-Type"); ct != "text/html; charset=utf-8" {
+		t.Errorf("wanted Content-Type text/html; charset=utf-8, got %q", ct)
+	}
+	if w.Body.Len() == 0 {
+		t.Errorf("expected non-empty body")
+	}
+}
+
+func TestHomeTemplateError(t *testing.T) {
+	handlers := &Handler{
+		Defaults:  defaultPlans(),
+		Templates: template.New("empty"),
+	}
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	handlers.Home(w, req)
+
+	if w.Code != http.StatusInternalServerError {
+		t.Errorf("wanted response code %v, got %v", http.StatusInternalServerError, w.Code)
+	}
 }
 
 func TestGetPlansReturnsDefaults(t *testing.T) {
