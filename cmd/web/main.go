@@ -22,7 +22,7 @@ func main() {
 
 	tmpl := template.Must(template.ParseGlob("assets/templates/*"))
 
-	h := &endpoints.Handler{
+	handlers := &endpoints.Handler{
 		Defaults:  defaults,
 		Templates: tmpl,
 	}
@@ -32,24 +32,14 @@ func main() {
 	mux.Handle("GET /css/", http.StripPrefix("/css/", http.FileServer(http.Dir("assets/css"))))
 	mux.Handle("GET /js/", http.StripPrefix("/js/", http.FileServer(http.Dir("assets/js"))))
 
-	mux.HandleFunc("GET /{$}", h.Home)
-	mux.HandleFunc("GET /plans", h.GetPlans)
-	mux.HandleFunc("POST /plans/best", h.PostBestPlans)
-	mux.HandleFunc("GET /google0c4ea5396b01145c.html", serveTemplate(tmpl, "google0c4ea5396b01145c.html"))
+	mux.HandleFunc("GET /{$}", handlers.Home)
+	mux.HandleFunc("GET /plans", handlers.GetPlans)
+	mux.HandleFunc("POST /plans/best", handlers.PostBestPlans)
 
 	addr := ":" + port()
 	log.Printf("listening on %s", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatal(err)
-	}
-}
-
-func serveTemplate(tmpl *template.Template, name string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		if err := tmpl.ExecuteTemplate(w, name, nil); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
 	}
 }
 
