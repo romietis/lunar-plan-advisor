@@ -2,20 +2,14 @@ package endpoints
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 )
-
-func SetUpRouter() *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
-	return router
-}
 
 func defaultPlans() advisor.PlansConfig {
 	return advisor.PlansConfig{
@@ -28,33 +22,32 @@ func defaultPlans() advisor.PlansConfig {
 	}
 }
 
-func TestEndpoint(t *testing.T) {
-	router := SetUpRouter()
-	router.LoadHTMLGlob("../../assets/templates/*")
-	router.GET("/", Home)
+func newTestHandler() *Handler {
+	tmpl := template.Must(template.ParseGlob("../../assets/templates/*"))
+	return &Handler{
+		Defaults:  defaultPlans(),
+		Templates: tmpl,
+	}
+}
+
+func TestHome(t *testing.T) {
+	h := newTestHandler()
 
 	w := httptest.NewRecorder()
-	request, err := http.NewRequest(http.MethodGet, "/", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	h.Home(w, req)
 
-	router.ServeHTTP(w, request)
 	if w.Code != http.StatusOK {
 		t.Errorf("wanted response code %v, got %v", http.StatusOK, w.Code)
 	}
 }
 
 func TestGetPlansReturnsDefaults(t *testing.T) {
-	router := SetUpRouter()
-	defaults := defaultPlans()
-	router.GET("/plans", func(c *gin.Context) {
-		GetPlans(c, defaults)
-	})
+	h := newTestHandler()
 
 	w := httptest.NewRecorder()
-	request, _ := http.NewRequest(http.MethodGet, "/plans", nil)
-	router.ServeHTTP(w, request)
+	req := httptest.NewRequest(http.MethodGet, "/plans", nil)
+	h.GetPlans(w, req)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("wanted response code %v, got %v", http.StatusOK, w.Code)
@@ -63,8 +56,8 @@ func TestGetPlansReturnsDefaults(t *testing.T) {
 	if err := json.Unmarshal(w.Body.Bytes(), &got); err != nil {
 		t.Fatal(err)
 	}
-	if len(got.Plans) != len(defaults.Plans) {
-		t.Errorf("wanted %d plans, got %d", len(defaults.Plans), len(got.Plans))
+	if len(got.Plans) != len(h.Defaults.Plans) {
+		t.Errorf("wanted %d plans, got %d", len(h.Defaults.Plans), len(got.Plans))
 	}
 	if got.Plans[0].Name != "Light" {
 		t.Errorf("wanted first plan Light, got %s", got.Plans[0].Name)
@@ -73,18 +66,11 @@ func TestGetPlansReturnsDefaults(t *testing.T) {
 
 func postBest(t *testing.T, body string) *httptest.ResponseRecorder {
 	t.Helper()
-	router := SetUpRouter()
-	defaults := defaultPlans()
-	router.POST("/plans/best", func(c *gin.Context) {
-		PostBestPlans(c, defaults)
-	})
+	h := newTestHandler()
 	w := httptest.NewRecorder()
-	req, err := http.NewRequest(http.MethodPost, "/plans/best", strings.NewReader(body))
-	if err != nil {
-		t.Fatal(err)
-	}
+	req := httptest.NewRequest(http.MethodPost, "/plans/best", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
-	router.ServeHTTP(w, req)
+	h.PostBestPlans(w, req)
 	return w
 }
 

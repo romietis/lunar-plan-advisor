@@ -1,12 +1,13 @@
 package main
 
 import (
+	"html/template"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 	"github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -19,31 +20,42 @@ func main() {
 		},
 	}
 
-	router := gin.Default()
+	tmpl := template.Must(template.ParseGlob("assets/templates/*"))
 
-	// Static assets
-	router.LoadHTMLGlob("assets/templates/*")
-	router.Static("/css", "assets/css")
-	router.Static("/js", "assets/js")
+	h := &endpoints.Handler{
+		Defaults:  defaults,
+		Templates: tmpl,
+	}
 
-	// Google Search Console
-	router.GET("/google0c4ea5396b01145c.html", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "google0c4ea5396b01145c.html", nil)
-	})
+	mux := http.NewServeMux()
 
-	// Serve script
-	router.GET("/", endpoints.Home)
+	mux.Handle("GET /css/", http.StripPrefix("/css/", http.FileServer(http.Dir("assets/css"))))
+	mux.Handle("GET /js/", http.StripPrefix("/js/", http.FileServer(http.Dir("assets/js"))))
 
-	// Return the built-in default plan configuration
-	router.GET("/plans", func(c *gin.Context) {
-		endpoints.GetPlans(c, defaults)
-	})
+	mux.HandleFunc("GET /{$}", h.Home)
+	mux.HandleFunc("GET /plans", h.GetPlans)
+	mux.HandleFunc("POST /plans/best", h.PostBestPlans)
+	mux.HandleFunc("GET /google0c4ea5396b01145c.html", serveTemplate(tmpl, "google0c4ea5396b01145c.html"))
 
-	// Calculate best plan(s) for a balance against the supplied (or default) plans
-	router.POST("/plans/best", func(c *gin.Context) {
-		endpoints.PostBestPlans(c, defaults)
-	})
+	addr := ":" + port()
+	log.Printf("listening on %s", addr)
+	if err := http.ListenAndServe(addr, mux); err != nil {
+		log.Fatal(err)
+	}
+}
 
-	router.Run()
+func serveTemplate(tmpl *template.Template, name string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		if err := tmpl.ExecuteTemplate(w, name, nil); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	}
+}
 
+func port() string {
+	if p := os.Getenv("PORT"); p != "" {
+		return p
+	}
+	return "8080"
 }
