@@ -14,47 +14,17 @@ your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/
 
 ## How to run
 
-### Web-Server
-
-```bash
-go run cmd/web/main.go
-```
-
-or run with Docker
-
-```bash
-docker build -t lunar-plan-advisor .
-docker run -p 8080:8080 lunar-plan-advisor
-```
-
-or via the Makefile shortcuts:
+All common tasks are wrapped in the [Makefile](./Makefile):
 
 ```bash
 make build   # build the Docker image
-make run     # run the container (detached) on port 8080
+make run     # run the container on port 8080
 make stop    # stop and remove the container
 make test    # run unit tests
 make e2e     # run end-to-end (BDD) tests
 ```
 
-Your application will be available at localhost:8080 and 0.0.0.0:8080
-
-### Tests
-
-Run unit tests
-```bash
-go test -v -shuffle=on -coverprofile=cover.out ./internal/endpoints/... ./advisor/...
-```
-
-View coverage report
-```bash
-go tool cover -html=cover.out
-```
-
-Run end-to-end (BDD) tests
-```bash
-go test -v ./internal/bdd/...
-```
+Run `make help` for the full list. The app will be available at http://localhost:8080.
 
 ## API
 

@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/gin-gonic/gin"
 	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 	"github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
 )
@@ -52,13 +51,11 @@ func (a *apiContext) sendRequestTo(method, endpoint string) error {
 	}
 	req.Header.Set("Content-Type", "application/json")
 
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.New()
-	router.POST(endpoint, func(c *gin.Context) {
-		endpoints.PostBestPlans(c, defaults)
-	})
+	h := &endpoints.Handler{Defaults: defaults}
+	mux := http.NewServeMux()
+	mux.HandleFunc(method+" "+endpoint, h.PostBestPlans)
 
-	router.ServeHTTP(a.response, req)
+	mux.ServeHTTP(a.response, req)
 	return nil
 
 }
