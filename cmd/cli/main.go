@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -24,17 +25,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Initialize plan configuration
-	planConfig := advisor.Plans{
-		Plans: []advisor.Plan{
-			{Name: "Light", AnnualInterestRate: 0.75, Fee: 0.0, Cap: 100000},
-			{Name: "Standard", AnnualInterestRate: 1.0, Fee: 29.0, Cap: 100000},
-			{Name: "Plus", AnnualInterestRate: 1.25, Fee: 69.0, Cap: 0},
-			{Name: "Unlimited", AnnualInterestRate: 1.75, Fee: 139.0, Cap: 0},
-		},
+	data, err := os.ReadFile("plans.json")
+	if err != nil {
+		fmt.Printf("Error reading plans.json: %v\n", err)
+		os.Exit(1)
+	}
+	var planConfig advisor.PlansConfig
+	if err := json.Unmarshal(data, &planConfig); err != nil {
+		fmt.Printf("Error parsing plans.json: %v\n", err)
+		os.Exit(1)
 	}
 
-	// Calculate best plans
 	bestPlans, err := planConfig.CalculatePlans(balance)
 	if err != nil {
 		fmt.Printf("Error calculating plans: %v\n", err)

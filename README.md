@@ -10,7 +10,7 @@
 *Currently only for Lunar Denmark*
 
 This is a simple web application that helps you to choose the best Lunar plan based on
-your savings. It is built with [Gin](https://gin-gonic.com/) and basic HTML/CSS/JavaScript.
+your savings. It is built with Go's standard library `net/http` and basic HTML/CSS/JavaScript.
 
 ## How to run
 
@@ -19,6 +19,7 @@ All common tasks are wrapped in the [Makefile](./Makefile):
 ```bash
 make build   # build the Docker image
 make run     # run the container on port 8080
+make up      # build the image and run the container
 make stop    # stop and remove the container
 make test    # run unit tests
 make e2e     # run end-to-end (BDD) tests
