@@ -10,7 +10,7 @@ on:
 
 jobs:
   go-test:
-    name: Run tests and collect coverage
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,10 +25,8 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
-      - name: Run tests
-        run: go test -v -coverprofile=cover.out ./internal/endpoints ./advisor
+      - name: Run unit tests
+        run: make test
 
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run e2e tests
+        run: make e2e
