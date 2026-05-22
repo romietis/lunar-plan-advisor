@@ -1,44 +1,61 @@
 package main
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/romietis/lunar-plan-advisor/v3/advisor"
 	"github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
 )
 
 func main() {
-	defaults := advisor.PlansConfig{
-		Plans: []advisor.PlanConfig{
-			{Name: "Light", AnnualInterestRate: 0.75, Fee: 0.0, Cap: 100000},
-			{Name: "Standard", AnnualInterestRate: 1.0, Fee: 29.0, Cap: 100000},
-			{Name: "Plus", AnnualInterestRate: 1.25, Fee: 69.0, Cap: 0},
-			{Name: "Unlimited", AnnualInterestRate: 1.75, Fee: 139.0, Cap: 0},
-		},
+	// Load default plans from disk.
+	data, err := os.ReadFile("plans.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var defaults advisor.PlansConfig
+	if err := json.Unmarshal(data, &defaults); err != nil {
+		log.Fatal(err)
 	}
 
+	// Parse HTML templates.
 	tmpl := template.Must(template.ParseGlob("assets/templates/*"))
 
+	// Build the handler with templates plus default plans.
 	handlers := &endpoints.Handler{
 		Defaults:  defaults,
 		Templates: tmpl,
 	}
 
+	// Register routes: static assets, then app endpoints.
 	mux := http.NewServeMux()
-
 	mux.Handle("GET /css/", http.StripPrefix("/css/", http.FileServer(http.Dir("assets/css"))))
 	mux.Handle("GET /js/", http.StripPrefix("/js/", http.FileServer(http.Dir("assets/js"))))
-
 	mux.HandleFunc("GET /{$}", handlers.Home)
 	mux.HandleFunc("GET /plans", handlers.GetPlans)
 	mux.HandleFunc("POST /plans/best", handlers.PostBestPlans)
 
+	// Configure the HTTP server with timeouts.
+	// Read/Write/ReadHeader timeouts defend against slow-client attacks (slowloris, slow body, slow read).
+	// IdleTimeout bounds keep-alive idle connections.
 	addr := ":" + port()
+	srv := &http.Server{
+		Addr:              addr,
+		Handler:           withLogging(mux),
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+
+	// Start serving
 	log.Printf("listening on %s", addr)
-	if err := http.ListenAndServe(addr, mux); err != nil {
+	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }

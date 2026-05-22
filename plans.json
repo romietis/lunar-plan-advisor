@@ -1,0 +1,8 @@
+{
+  "plans": [
+    {"name": "Light",     "annualInterestRate": 0.0, "fee": 0.0,   "cap": 100000},
+    {"name": "Standard",  "annualInterestRate": 0.25,  "fee": 39.0,  "cap": 100000},
+    {"name": "Plus",      "annualInterestRate": 0.5, "fee": 79.0,  "cap": 0},
+    {"name": "Unlimited", "annualInterestRate": 1.0, "fee": 149.0, "cap": 0}
+  ]
+}
