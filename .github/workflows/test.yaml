@@ -10,7 +10,7 @@ on:
 
 jobs:
   go-test:
-    name: Run tests
+    name: Run tests and collect coverage
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,3 +30,8 @@ jobs:
 
       - name: Run e2e tests
         run: make e2e
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
