@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/romietis/lunar-plan-advisor/v3/advisor"
-	"github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
+	"github.com/romietis/lunar-plan-advisor/v4/advisor"
+	"github.com/romietis/lunar-plan-advisor/v4/internal/endpoints"
 )
 
 func main() {

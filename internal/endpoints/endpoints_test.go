@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/romietis/lunar-plan-advisor/v3/advisor"
+	"github.com/romietis/lunar-plan-advisor/v4/advisor"
 )
 
 func defaultPlans() advisor.PlansConfig {

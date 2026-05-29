@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/romietis/lunar-plan-advisor/v3/advisor"
+	"github.com/romietis/lunar-plan-advisor/v4/advisor"
 )
 
 // Handler holds the dependencies shared by the HTTP endpoints.
