@@ -46,7 +46,7 @@ func main() {
 	addr := ":" + port()
 	srv := &http.Server{
 		Addr:              addr,
-		Handler:           withLogging(mux),
+		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
