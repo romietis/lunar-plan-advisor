@@ -12,8 +12,8 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
-	"github.com/romietis/lunar-plan-advisor/v3/advisor"
-	"github.com/romietis/lunar-plan-advisor/v3/internal/endpoints"
+	"github.com/romietis/lunar-plan-advisor/v4/advisor"
+	"github.com/romietis/lunar-plan-advisor/v4/internal/endpoints"
 )
 
 type apiContext struct {
