@@ -68,5 +68,10 @@ But it doesn't tell you which plan is most profitable based on *your* savings.
 It helps identify the point at which one plan becomes more profitable than another by
 comparing the net profits of different plans.
 
+## Contributing
+
+Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to
+set up, test, and submit changes.
+
 ## Privacy
 Your data is not stored or sent to anyone.
